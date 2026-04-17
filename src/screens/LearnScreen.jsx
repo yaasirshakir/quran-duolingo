@@ -66,6 +66,16 @@ export default function LearnScreen({ verses, chapterNames, onComplete }) {
   const isCorrect = selected === targetWord.translation.text;
   const progress = (idx / exercises.length) * 100;
 
+  const advance = () => {
+    if (idx + 1 >= exercises.length) {
+      setDone(true);
+    } else {
+      setIdx((i) => i + 1);
+      setSelected(null);
+      setShowFeedback(false);
+    }
+  };
+
   const handleSelect = (opt) => {
     if (showFeedback) return;
     setSelected(opt);
@@ -78,16 +88,8 @@ export default function LearnScreen({ verses, chapterNames, onComplete }) {
         verseKey: verse.verse_key,
       });
     }
-  };
-
-  const handleContinue = () => {
-    if (idx + 1 >= exercises.length) {
-      setDone(true);
-    } else {
-      setIdx((i) => i + 1);
-      setSelected(null);
-      setShowFeedback(false);
-    }
+    // Auto-advance after 1.4s
+    setTimeout(() => advance(), 1400);
   };
 
   return (
@@ -220,14 +222,6 @@ export default function LearnScreen({ verses, chapterNames, onComplete }) {
               </>
             )}
           </div>
-          <button
-            onClick={handleContinue}
-            className={`w-full py-4 rounded-xl font-black text-white text-sm tracking-wider transition-all btn-bounce ${
-              isCorrect ? 'bg-emerald-500 shadow-lg shadow-emerald-200' : 'bg-red-400'
-            }`}
-          >
-            CONTINUE
-          </button>
         </div>
       )}
     </div>
