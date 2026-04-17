@@ -8,11 +8,8 @@
 
 body {
   font-family: 'Nunito', sans-serif;
-  background: linear-gradient(135deg, #064e3b 0%, #065f46 50%, #047857 100%);
+  background: #fafafa;
   min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .arabic-text {
@@ -23,31 +20,14 @@ body {
 
 .phone-container {
   width: 100%;
-  max-width: 393px;
+  max-width: 480px;
   height: 100dvh;
-  max-height: 852px;
   background: #fafafa;
   overflow: hidden;
   display: flex;
   flex-direction: column;
   position: relative;
-  border-radius: 40px;
-  box-shadow: 0 40px 80px rgba(0,0,0,0.5), 0 0 0 8px #1a1a1a, 0 0 0 10px #333;
-}
-
-@media (max-height: 870px) {
-  .phone-container {
-    border-radius: 0;
-    box-shadow: none;
-    max-height: 100dvh;
-  }
-}
-
-@media (max-width: 393px) {
-  .phone-container {
-    border-radius: 0;
-    box-shadow: none;
-  }
+  margin: 0 auto;
 }
 
 .btn-bounce:active {
