@@ -23,9 +23,12 @@ function buildTestExercises(verses, learnedWords) {
     const testedWords = words.filter((w) => learnedWords[wordKey(w)]);
     if (testedWords.length === 0) continue;
 
-    const correctTexts = testedWords.map((w) => w.translation.text);
+    // Strip parens for bank display and answer matching
+    const correctTexts = testedWords.map((w) => stripParens(w.translation.text));
     const distractors = shuffle(
-      allTranslations.filter((t) => !correctTexts.includes(t))
+      allTranslations
+        .map(stripParens)
+        .filter((t, i, self) => !correctTexts.includes(t) && self.indexOf(t) === i)
     ).slice(0, Math.max(3, testedWords.length));
 
     const bankItems = shuffle([...correctTexts, ...distractors]).map((text, i) => ({
@@ -33,7 +36,7 @@ function buildTestExercises(verses, learnedWords) {
       text,
     }));
 
-    const correctMap = Object.fromEntries(testedWords.map((w) => [w.id, w.translation.text]));
+    const correctMap = Object.fromEntries(testedWords.map((w, i) => [w.id, correctTexts[i]]));
 
     exercises.push({ verse, words, testedWordIds: new Set(testedWords.map((w) => w.id)), bankItems, correctMap });
   }
@@ -213,7 +216,7 @@ export default function TestScreen({ verses, chapterNames, onComplete }) {
               if (!testedWordIds.has(w.id)) {
                 return (
                   <span key={w.id} className="text-gray-600 font-semibold">
-                    {stripParens(w.translation?.text || '')}
+                    {w.translation?.text || ''}
                   </span>
                 );
               }
