@@ -33,7 +33,13 @@ function buildExercises(verses, learnedWords) {
   return exercises.slice(0, 10);
 }
 
-export default function LearnScreen({ verses, onComplete }) {
+const verseRef = (verse, chapterNames) => {
+  const [ch] = verse.verse_key.split(':');
+  const name = chapterNames?.[parseInt(ch)] || '';
+  return name ? `${name} ${verse.verse_key}` : verse.verse_key;
+};
+
+export default function LearnScreen({ verses, chapterNames, onComplete }) {
   const { learnedWords, learnWord } = useAppStore();
 
   const exercises = useMemo(
@@ -127,6 +133,11 @@ export default function LearnScreen({ verses, onComplete }) {
                 </span>
               ))}
           </div>
+
+          {/* Verse reference */}
+          <p className="text-[11px] font-black text-emerald-500 text-center mb-3 tracking-wide">
+            {verseRef(verse, chapterNames)}
+          </p>
 
           {/* Target word spotlight */}
           <div className="border-t border-emerald-200 pt-4 flex flex-col items-center gap-1">

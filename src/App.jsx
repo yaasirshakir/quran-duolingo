@@ -4,7 +4,7 @@ import BottomNav from './components/BottomNav';
 import HomeScreen from './screens/HomeScreen';
 import LearnScreen from './screens/LearnScreen';
 import TestScreen from './screens/TestScreen';
-import { fetchManyChapters, loadAllFromCache } from './services/quranApi';
+import { fetchManyChapters, loadAllFromCache, fetchChapterNames } from './services/quranApi';
 
 const CHAPTER_POOL = [
   1, 36, 55, 67, 71, 73, 74, 75, 76, 77,
@@ -37,10 +37,14 @@ export default function App() {
   const [screen, setScreen] = useState('home');
   const [verses, setVerses] = useState([]);
   const [loadedChapters, setLoadedChapters] = useState([]);
+  const [chapterNames, setChapterNames] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    // Fetch chapter names (cached after first load)
+    fetchChapterNames().then(setChapterNames).catch(() => {});
+
     // Try to hydrate instantly from cache before touching the network
     const saved = getSavedChapters();
     if (saved) {
@@ -95,10 +99,10 @@ export default function App() {
                 />
               )}
               {screen === 'learn' && (
-                <LearnScreen verses={verses} onComplete={() => setScreen('home')} />
+                <LearnScreen verses={verses} chapterNames={chapterNames} onComplete={() => setScreen('home')} />
               )}
               {screen === 'test' && (
-                <TestScreen verses={verses} onComplete={() => setScreen('home')} />
+                <TestScreen verses={verses} chapterNames={chapterNames} onComplete={() => setScreen('home')} />
               )}
             </div>
             <BottomNav current={screen} onChange={setScreen} />

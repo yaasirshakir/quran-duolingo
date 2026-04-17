@@ -41,7 +41,13 @@ function buildTestExercises(verses, learnedWords) {
   return exercises;
 }
 
-export default function TestScreen({ verses, onComplete }) {
+const verseRef = (verse, chapterNames) => {
+  const [ch] = verse.verse_key.split(':');
+  const name = chapterNames?.[parseInt(ch)] || '';
+  return name ? `${name} ${verse.verse_key}` : verse.verse_key;
+};
+
+export default function TestScreen({ verses, chapterNames, onComplete }) {
   const { learnedWords } = useAppStore();
 
   const exercises = useMemo(
@@ -187,9 +193,14 @@ export default function TestScreen({ verses, onComplete }) {
               );
             })}
           </div>
-          <p className="text-[10px] text-purple-400 font-bold text-right mt-1">
-            Tap words to see translation · Purple words are tested
-          </p>
+          <div className="flex items-center justify-between mt-2">
+            <p className="text-[11px] font-black text-purple-500 tracking-wide">
+              {verseRef(verse, chapterNames)}
+            </p>
+            <p className="text-[10px] text-purple-400 font-bold">
+              Tap words · purple = tested
+            </p>
+          </div>
         </div>
 
         {/* Translation with blanks */}

@@ -41,3 +41,21 @@ export const loadAllFromCache = (chapterIds) => {
   const results = chapterIds.map((id) => getCached(id));
   return results.every(Boolean) ? results.flat() : null;
 };
+
+const CHAPTER_NAMES_KEY = 'quran-chapter-names-v1';
+
+export const fetchChapterNames = async () => {
+  try {
+    const raw = localStorage.getItem(CHAPTER_NAMES_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch {}
+
+  const res = await fetch(`${BASE_URL}/chapters?language=en`);
+  if (!res.ok) throw new Error(`HTTP error ${res.status}`);
+  const data = await res.json();
+
+  // Store as { chapterId: name_simple } map
+  const map = Object.fromEntries(data.chapters.map((c) => [c.id, c.name_simple]));
+  try { localStorage.setItem(CHAPTER_NAMES_KEY, JSON.stringify(map)); } catch {}
+  return map;
+};
